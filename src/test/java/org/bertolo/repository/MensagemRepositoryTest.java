@@ -1,5 +1,6 @@
 package org.bertolo.repository;
 
+import org.bertolo.helper.MensagemHelper;
 import org.bertolo.model.Mensagem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ public class MensagemRepositoryTest {
     @Test
     void devePermitirRegistrarMensagem() {
         // Arrange - Preparar
-        var mensagem = this.gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         when(this.mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
 
         // Act - Atuar
@@ -50,7 +51,7 @@ public class MensagemRepositoryTest {
 
         //Arrange
         var id = UUID.randomUUID();
-        var mensagem = this.gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         mensagem.setId(id);
 
         // Act
@@ -71,7 +72,7 @@ public class MensagemRepositoryTest {
     void devePermitirRemoverMensagem() {
         //Arrange
         var id = UUID.randomUUID();
-        var mensagem = this.gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         mensagem.setId(id);
 
         // Act
@@ -84,14 +85,4 @@ public class MensagemRepositoryTest {
         // Assert
         verify(this.mensagemRepository, times(1)).deleteById(id);
     }
-
-    private Mensagem gerarMensagem() {
-        return Mensagem.builder()
-                .usuario("João")
-                .conteudo("conteudo")
-                .build();
-
-    }
-
-
 }
