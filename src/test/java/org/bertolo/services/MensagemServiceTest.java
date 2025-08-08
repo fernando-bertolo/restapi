@@ -1,6 +1,7 @@
 package org.bertolo.services;
 
 import org.bertolo.helper.MensagemHelper;
+import org.bertolo.model.Mensagem;
 import org.bertolo.repository.MensagemRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.beans.Beans.isInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class MensagemServiceTest {
 
@@ -32,14 +39,45 @@ public class MensagemServiceTest {
 
     @Test
     void devePermitirRegistrarMensagem() {
+        // Arrange
         var mensagem = MensagemHelper.gerarMensagem();
+        when(this.mensagemRepository.save(any(Mensagem.class))).thenAnswer(i -> i.getArgument(0));
 
-        when(this.mensagemRepository.save(any()))
+        //Act
+        var mensagemResgistrada = this.mensagemService.registrarMensagem(mensagem);
+
+        //Assert
+        assertThat(mensagemResgistrada)
+                .isNotNull()
+                .isInstanceOf(Mensagem.class);
+
+        assertThat(mensagemResgistrada.getId())
+                .isNotNull();
+
+        assertThat(mensagemResgistrada.getUsuario())
+                .isEqualTo(mensagem.getUsuario());
+
+        assertThat(mensagemResgistrada.getConteudo())
+                .isEqualTo(mensagem.getConteudo());
+
     }
 
     @Test
     void devePermitirObterMensagemPorId() {
-        fail("metodo nao implementado");
+        // Arrange
+        var id = UUID.randomUUID();
+        var mensagem = MensagemHelper.gerarMensagem();
+        mensagem.setId(id);
+
+        when(this.mensagemRepository.findById(any(UUID.class))).thenReturn(Optional.of(mensagem));
+
+        // Act
+        var mensagemObtida = this.mensagemService.obterMensagem(id);
+
+        // Assert
+
+        verify(this.mensagemRepository, times(1)).findById(id);
+        assertThat(mensagemObtida).isEqualTo(mensagem);
     }
 
     @Test
