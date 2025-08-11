@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.bertolo.exceptions.MensagemNotFoundException;
 import org.bertolo.model.Mensagem;
 import org.bertolo.repository.MensagemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -24,5 +27,29 @@ public class MensagemServiceImpl implements MensagemService {
     public Mensagem obterMensagem(UUID id) {
         return this.mensagemRepository.findById(id)
                 .orElseThrow(() -> new MensagemNotFoundException("Mensagem não encontrada!"));
+    }
+
+    @Override
+    public Mensagem atualizarMensagem(UUID id, Mensagem mensagemAtualizada) {
+        var mensagem = this.obterMensagem(id);
+        if(!mensagem.getId().equals(mensagemAtualizada.getId())) {
+            throw new MensagemNotFoundException("Mensagem não apresenta o ID correto");
+        }
+
+        mensagem.setDataAlteracao(LocalDateTime.now());
+        mensagem.setConteudo(mensagemAtualizada.getConteudo());
+        return this.mensagemRepository.save(mensagem);
+    }
+
+    @Override
+    public boolean removerMensagem(UUID id) {
+        var mensagem = this.obterMensagem(id);
+        this.mensagemRepository.delete(mensagem);
+        return true;
+    }
+
+    @Override
+    public Page<Mensagem> obterMensagens(Pageable pageable) {
+        return this.mensagemRepository.obterMensagem(pageable);
     }
 }

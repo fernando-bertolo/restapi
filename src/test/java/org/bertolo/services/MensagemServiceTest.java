@@ -44,21 +44,23 @@ public class MensagemServiceTest {
         when(this.mensagemRepository.save(any(Mensagem.class))).thenAnswer(i -> i.getArgument(0));
 
         //Act
-        var mensagemResgistrada = this.mensagemService.registrarMensagem(mensagem);
+        var mensagemRegistrada = this.mensagemService.registrarMensagem(mensagem);
 
         //Assert
-        assertThat(mensagemResgistrada)
+        assertThat(mensagemRegistrada)
                 .isNotNull()
                 .isInstanceOf(Mensagem.class);
 
-        assertThat(mensagemResgistrada.getId())
+        assertThat(mensagemRegistrada.getId())
                 .isNotNull();
 
-        assertThat(mensagemResgistrada.getUsuario())
+        assertThat(mensagemRegistrada.getUsuario())
                 .isEqualTo(mensagem.getUsuario());
 
-        assertThat(mensagemResgistrada.getConteudo())
+        assertThat(mensagemRegistrada.getConteudo())
                 .isEqualTo(mensagem.getConteudo());
+
+        verify(this.mensagemRepository, times(1)).save(mensagem);
 
     }
 
