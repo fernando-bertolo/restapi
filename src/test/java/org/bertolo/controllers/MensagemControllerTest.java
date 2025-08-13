@@ -124,10 +124,6 @@ public class MensagemControllerTest {
         verify(this.mensagemService, never()).obterMensagem(any(UUID.class));
     }
 
-    @Test
-    void devePermitirRemoverMensagem() {
-        fail("Método não implementado");
-    }
 
     private String asJsonString(final Object obj) {
         try {

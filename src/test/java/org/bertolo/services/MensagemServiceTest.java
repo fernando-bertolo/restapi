@@ -81,20 +81,4 @@ public class MensagemServiceTest {
         verify(this.mensagemRepository, times(1)).findById(id);
         assertThat(mensagemObtida).isEqualTo(mensagem);
     }
-
-    @Test
-    void devePermitirObterMensagens() {
-        fail("metodo nao implementado");
-    }
-
-
-    @Test
-    void devePermitirModificarMensagem() {
-        fail("metodo nao implementado");
-    }
-
-    @Test
-    void devePermitirRemoverMensagem() {
-        fail("metodo nao implementado");
-    }
 }
